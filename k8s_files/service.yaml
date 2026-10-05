@@ -3,5 +3,8 @@ kind: Service
 metadata: {name: chatbot, namespace: chatbot-ns}
 spec:
   selector: {app: chatbot}
-  ports: [{port: 80, targetPort: 8501}]
-  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8501
+    nodePort: 30032
+  type: NodePort
