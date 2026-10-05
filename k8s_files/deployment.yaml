@@ -1,0 +1,35 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: chatbot
+  namespace: chatbot-ns
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: chatbot
+  template:
+    metadata:
+      labels:
+        app: chatbot
+    spec:
+      containers:
+      - name: chatbot
+        image: dineshreddypala31/chatbot:latest
+        ports:
+        - containerPort: 8501
+
+        env:
+          - name: GROQ_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: chatbot-secrets
+                key: GROQ_API_KEY
+        readinessProbe:
+          httpGet: { path: /_stcore/health, port: 8501 }
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          httpGet: { path: /_stcore/health, port: 8501 }
+          initialDelaySeconds: 30
+          periodSeconds: 30
